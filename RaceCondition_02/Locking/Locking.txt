@@ -1,0 +1,25 @@
+# Locking
+
+Locking allows a thread to lock a shared resource so that only one thread can access or modify it at a time.
+
+It prevents Race Conditions by ensuring that write operations are performed by only one thread while other threads wait until the lock is released.
+
+There are multiple ways to implement locking in Java.
+
+## 1. synchronized
+
+- Allows only one thread to execute a synchronized method or block at a time.
+- Lock acquisition and release are handled automatically by the JVM.
+- Also known as an Intrinsic Lock or Monitor Lock.
+
+## 2. ReentrantLock
+
+- Provides manual control over locking.
+- The programmer explicitly acquires and releases the lock using:
+    - lock()
+    - unlock()
+- Offers more flexibility than synchronized.
+
+Given Example 
+1. Locking >> InterinsicLock >> Main.java
+2. Lockng >> ReentrantLock >> Main.java

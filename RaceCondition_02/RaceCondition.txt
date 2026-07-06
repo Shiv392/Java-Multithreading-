@@ -1,0 +1,14 @@
+1. What is Race Condition : 
+Race condition is a situation where multiple thread update/change the same resource/data 
+at the same time so that the final result gets unpredictible.
+
+int count = 0;
+Thread t1 = new Thread(()-> count++);
+Thread t2 = new Thread(()-> count++);
+
+now if both thread access the count at the same time
+t1 will updae 0 to 1 
+t2 also gets count as 0 now it updates to 1 
+so final answer would be 1 rather then 2.
+
+This is race condition.
