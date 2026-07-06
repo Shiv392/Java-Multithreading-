@@ -1,0 +1,33 @@
+# In the First example Without Thread, we can see without completing Downloading.java 
+method, execution will not move further.
+
+#WithoutThread
+public static void main(String[]args){
+        Downloading downloading = new Downloading();
+        System.out.println("Main Thread Starting..........");
+
+        downloading.download();
+
+        System.out.println("Main Thread Ending..........");
+}
+
+Here if downloading.download() takes so much time to execute then flow will be stopped also 
+at this time java will not accept more request. 
+--> This created Blocking operation.
+
+So this can be solved by using Java Thread.
+1. Where ever jvm see thread it directly send to the CPU, when cpu executed this thread then 
+it returns back to the JVM.
+
+#With Thread 
+1. Now we have created two Threads Downloading, Plyaing using Runnable interface & extends Threads.
+2. Now in the main thread Main.java
+3. where jdk check this is a thread then it will send this to CPU, now cpu creates and schedular then
+call run() to start execution.
+4. Between this exectution moves to the next line.
+
+Output =============>
+Main Thread Starting..........
+Main Thread Ending..........
+Playing completed...........
+Downloading completed...........

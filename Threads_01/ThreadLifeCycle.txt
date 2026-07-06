@@ -1,0 +1,29 @@
+Thread Lifecycle
+----------------
+
+NEW
+ |
+ | start()
+ |
+RUNNABLE
+ |
+ | CPU
+ |
+RUNNING
+ |
+ | sleep()
+ | wait()
+ | join()
+ |
+WAITING / TIMED_WAITING
+ |
+ | notified
+ |
+RUNNABLE
+ |
+Finished
+ |
+TERMINATED
+
+
+---------------------------------------------------

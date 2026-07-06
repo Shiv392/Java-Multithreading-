@@ -1,0 +1,112 @@
+=========================================
+            JAVA THREADS
+=========================================
+
+What is Thread?
+---------------
+A Thread is the smallest unit of execution inside a process.
+
+One Process can have multiple Threads.
+
+Example:
+---------
+Chrome Browser (Process)
+
+    |
+    |---- UI Thread
+    |---- Network Thread
+    |---- Rendering Thread
+    |---- Download Thread
+
+All threads share the same memory but execute independently.
+
+---------------------------------------------------
+
+Process vs Thread
+-----------------
+
+Process
+-------
+- Independent program
+- Separate Memory
+- Heavyweight
+- Communication is expensive
+- Example:
+    Chrome
+    VS Code
+    Spotify
+
+Thread
+------
+- Smallest execution unit
+- Shares process memory
+- Lightweight
+- Fast communication
+- Example:
+    UI Thread
+    Download Thread
+    Rendering Thread
+
+---------------------------------------------------
+
+Problem Without Threads
+-----------------------
+
+Imagine downloading a 2GB file. As Java runs in the main thread so it will block next 
+execution while waiting to get completed the current execution. 
+
+Without Thread:
+Download File
+      |
+      |
+      |
+      |
+User Click
+
+Application Frozen ❌
+
+Reason:
+Only one execution path exists.
+---------------------------------------------------
+
+Solution Using Threads
+----------------------
+
+Main Thread
+     |
+     |------------ UI
+     |
+     |------------ Download Thread
+
+Now,
+Download continues...
+User can still click buttons.
+Application remains responsive ✅
+
+
+
+Virtual Threads (Java 21)
+--------------------------
+
+Problem:
+Normal Threads are expensive.
+
+Solution:
+Virtual Threads
+
+- Lightweight
+- Millions can be created
+- Managed by JVM
+- Best for I/O tasks
+
+
+---------------------------------------------------
+
+Advantages
+----------
+✔ Better CPU Utilization
+✔ Responsive Applications
+✔ Parallel Task Execution
+✔ Faster I/O Operations
+✔ Improved User Experience
+✔ Efficient Resource Usage
