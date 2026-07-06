@@ -1,0 +1,64 @@
+# ExecutorService
+
+ExecutorService is a thread pool provided by Java to manage and execute multiple tasks efficiently.
+
+## Why use ExecutorService?
+
+- No need to create and manage threads manually.
+- Reuses existing threads (Thread Pool).
+- Better performance than creating new threads repeatedly.
+- Automatically schedules tasks.
+
+Instead of:
+
+Thread -> Work -> Destroy
+
+ExecutorService:
+
+Thread Pool -> Execute Multiple Tasks -> Reuse Threads
+
+## Common Methods
+
+1. execute(Runnable task)
+   - Executes a Runnable task.
+   - Does not return any result.
+
+2. submit(Runnable/Callable task)
+   - Submits a task for execution.
+   - Returns a Future object.
+   - Can be used to get the result of a Callable task.
+
+3. shutdown()
+   - Stops accepting new tasks.
+   - Waits for already submitted tasks to complete.
+
+4. shutdownNow()
+   - Attempts to stop all running tasks immediately.
+   - Interrupts active threads.
+
+5. awaitTermination(timeout, unit)
+   - Waits for all tasks to finish after shutdown().
+
+## Creating ExecutorService
+
+1. Single Thread
+
+Executors.newSingleThreadExecutor()
+
+2. Fixed Thread Pool
+
+Executors.newFixedThreadPool(n)
+
+3. Cached Thread Pool
+
+Executors.newCachedThreadPool()
+
+## Flow
+
+Create ExecutorService
+        ↓
+Submit Tasks
+        ↓
+Execute Tasks using Thread Pool
+        ↓
+shutdown()
