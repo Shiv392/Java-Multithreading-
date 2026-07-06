@@ -1,0 +1,29 @@
+#There are several methods in the thread.
+
+1. start() -> call run() inside the thread class.
+2. run() -> actual business logic inside the thread that executes.
+3. sleep(time millisecond) -> make thread stop for the given time.
+4. join() -> wait current thread to get completed first.
+
+1. public static void main(String[]args){
+        Thread t = new Thread(()-> System.out.println("Thread is running...."+ Thread.currentThread().getName()));
+        t.start();
+
+        //here first it will print main thread
+        //then print Thread running
+        System.out.println("Main Thread is running...."+ Thread.currentThread().getName());
+}
+
+2.      Thread t = new Thread(()-> System.out.println("Thread is running...."+ Thread.currentThread().getName()));
+        t.start();
+
+        try{
+            t.join();
+        }
+        catch(Exception e){
+
+        }
+
+        System.out.println("Main Thread is running...."+ Thread.currentThread().getName());
+
+here join() will wait thread t to get complet first then print Main Thread 
