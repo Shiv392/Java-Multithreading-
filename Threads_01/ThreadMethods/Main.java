@@ -14,5 +14,11 @@ public class Main {
         }
 
         System.out.println("Main Thread is running...."+ Thread.currentThread().getName());
+        // t.start(); //IllegalThreadStateException Run time Error.
     }
 }
+
+
+//here each thread has a lifecycle like new -> runnable -> running -> waiting -> dead.
+//after their execution is completed they are dead and cannnot be restarted again.
+//if we try to restart a dead thread it will throw and IllegalThreadStateException Run time Error.
