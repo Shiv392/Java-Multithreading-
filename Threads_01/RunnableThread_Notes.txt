@@ -1,0 +1,62 @@
+Runnable returns an Task to be execute by the Thread 
+
+public class Counter implements Runnable{
+    public void count(){
+
+    }
+    @Override
+    public void start(){
+        //task 
+    }
+}
+
+Now here Counter is a task class not an Thread so it directly dont have acess to thread method.
+
+Main class
+public class Main{
+    Counter c1 = new Counter();
+    c1.count(); //we can use as object but can't as task
+    c1.start(); //not possible because it returns task not thread 
+
+    Thread t1 = new Thread(c1);
+    t1.start();
+}
+
+Here Counter class only change for one change this follows SRP.
+
+
+⭐⭐⭐ Diff between extends Threads and Runnable 
+Runnable version ✅
+class EmailSender implements Runnable {
+    @Override
+    public void run() {
+        sendEmail();
+    }
+
+    private void sendEmail() {
+        // email logic
+    }
+}
+
+Is class ki responsibility hai: Email send karna.
+
+Bas.
+
+Thread version
+class EmailSender extends Thread {
+    @Override
+    public void run() {
+        sendEmail();
+    }
+}
+
+Ab EmailSender inherit karta hai:
+start()
+interrupt()
+setPriority()
+join()
+...
+
+Yahan ek subtle point hai: Ye methods Thread ki responsibility hain, tumhari class ne unhe implement nahi kiya.
+
+Isliye technically SRP ka violation directly inheritance ki wajah se nahi bolte.

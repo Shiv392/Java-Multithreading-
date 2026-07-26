@@ -1,0 +1,48 @@
+in Java we can use extends Thread to create an new Thread class. 
+
+public class Counter extends Thread{
+    @Override
+    public void run(){
+        //task to do.
+    }
+}
+
+⭐⭐⭐ # Here it shows Counte IS-A Thread i.e by using its object we can directly access their 
+Thread methods. 
+
+Using in Main.Java
+public class Main{
+    Counter counter = new Counter();
+
+    //now here Counter is a Thread so without creating thread we can run start
+    //without creating new threads
+    counter.start();
+    
+}
+Here due to inheritance Counter class has mutliple responsibilities and access 
+1. start()
+2. interrupt()
+3. setPriority()
+4. isAlive()
+5. join()
+
+This is called "Class exposes functionality that it doesn't logically own."
+
+⭐⭐⭐ Ek analogy ================>
+Maan lo ek class hai: class EmailSender
+Uska kaam sirf email bhejna hai.
+Agar ye
+
+class EmailSender extends Thread
+
+ban gayi, to ab logically EmailSender ke paas start(), interrupt(), join() sab aa gaye.
+
+Question ye hai:
+
+Kya email bhejna aur thread manage karna ek hi responsibility hai?
+
+Nahi.
+It also breaks SRP because here Counter class can do mutliple thigs like start, run every 
+Thread class .
+
+Isi liye Runnable better design hai.
