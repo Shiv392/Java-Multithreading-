@@ -1,29 +1,97 @@
-Thread Lifecycle
-----------------
+⭐⭐⭐Java Thread Lifecycle ===========>
 
-NEW
- |
- | start()
- |
-RUNNABLE
- |
- | CPU
- |
-RUNNING
- |
- | sleep()
- | wait()
- | join()
- |
-WAITING / TIMED_WAITING
- |
- | notified
- |
-RUNNABLE
- |
-Finished
- |
-TERMINATED
+Step 1: NEW State : Jab thread ka object create hota hai.
+Thread t = new Thread(new Counter());
+Abhi thread sirf memory me bana hai.
+❌ CPU execute nahi kar raha.
+❌ Scheduler ko bhi nahi mila.
+State = NEW
 
+Step 2: RUNNABLE State
+Jab : t.start();
+call karte ho.
+Ab thread : 
+JVM ko bolta hai "Mujhe execute karna hai."
+JVM thread ko Runnable Pool me daal deti hai.
+OS Scheduler ise manage karta hai.
 
----------------------------------------------------
+Important:
+start() ka matlab Thread immediately execute hoga ye nahi hota.
+Bas execute hone ke liye ready hai.
+State = RUNNABLE
+
+Step 3: Running (CPU Execution)
+OS Scheduler decide karta hai "Ab CPU kis thread ko milega?"
+Jab scheduler CPU assign kar deta hai,
+
+public void run() {
+    System.out.println("Running...");
+}
+to run() execute hona start hota hai.
+Yahi actual execution hai.
+Note: Java me official state "RUNNING" nahi hai. Official enum me ye bhi RUNNABLE hi mana jata hai. Hum samjhane ke liye "Running" bolte hain.
+
+Step 4: Waiting / Blocked / Timed Waiting : Execution ke beech thread ruk bhi sakta hai.
+BLOCKED : Lock nahi mila.
+synchronized(obj){
+Dusra thread lock pakde hua hai.
+Thread wait karega.
+WAITING
+Kisi event ka wait.
+join()
+wait()
+TIMED_WAITING
+
+Kuch time ke liye rukna : sleep(2000);
+
+2 second baad fir scheduler ke paas jayega.
+
+Step 5: Back to RUNNABLE
+Jaise hi
+Lock mil gaya
+Sleep complete
+join complete
+
+Thread fir se Runnable Queue me aa jata hai. Fir scheduler decide karega kab CPU dena hai.
+
+Step 6: TERMINATED
+run() method complete.
+public void run(){
+    // work
+}
+
+Method khatam. Thread permanently terminate.
+
+Dobara
+
+t.start();
+
+karoge to
+
+IllegalThreadStateException
+
+milega.
+
+Complete Flow
+Thread Object
+      │
+      ▼
+ NEW
+      │
+ start()
+      ▼
+ RUNNABLE
+      │
+ Scheduler selects
+      ▼
+ Running (CPU executes run())
+      │
+      ├───────────────┐
+      │               │
+      ▼               ▼
+BLOCKED        WAITING / TIMED_WAITING
+      │               │
+      └──────► RUNNABLE ◄──────┘
+                   │
+                   ▼
+              TERMINATED
