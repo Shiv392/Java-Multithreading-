@@ -4,6 +4,7 @@
 2. run() -> actual business logic inside the thread that executes.
 3. sleep(time millisecond) -> make thread stop for the given time.
 4. join() -> wait current thread to get completed first.
+5. wait() --> puts thread in thread mode but also release lock.
 
 1. public static void main(String[]args){
         Thread t = new Thread(()-> System.out.println("Thread is running...."+ Thread.currentThread().getName()));
@@ -27,3 +28,19 @@
         System.out.println("Main Thread is running...."+ Thread.currentThread().getName());
 
 here join() will wait thread t to get complet first then print Main Thread 
+
+#Differenec between sleep() and wait() : 
+both used to put the thread on sleep but in sleep();
+synchronized(lock) {
+    Thread.sleep(5000);
+}
+It will not release the lock so that other thread have to wait for their sleep also.
+
+Now wait();
+lock.wait();
+
+it simply says "I can't do this work right now, let me wait". It also releases the lock.
+synchronized(lock){
+    lock.wait();
+}
+lock.wait() call hua, Thread WAITING state me chala gaya. Lock release kar diya. Ab koi aur thread lock acquire kar sakta hai.
