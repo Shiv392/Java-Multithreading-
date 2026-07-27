@@ -15,14 +15,14 @@ public class Main {
             }
         });
 
-        t1.start();
-        t2.start();
-
         try {
+            t1.start();
+            t2.start();
+
             t1.join();
             t2.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println("Run time exception error: "+e.getMessage());
         }
 
         System.out.println("Final Count: "+counter.getCount());
