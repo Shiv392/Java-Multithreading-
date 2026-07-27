@@ -1,0 +1,94 @@
+⭐⭐⭐ What is ExecutorService ==========>
+ExecutorService ek interface hai jo thread pool ko manage karta hai aur tasks execute karne ki responsibility leta hai.
+Tum thread nahi banate.
+Tum sirf task dete ho.
+
+ExecutorService decide karta hai:
+Kis thread ko task dena hai.
+Kab execute karna hai.
+Thread ko reuse karna hai.
+
+Without ExecutorService : 
+Tum abhi tak aise code likh rahe the.
+Thread t1 = new Thread(new Counter());
+Thread t2 = new Thread(new Counter());
+
+t1.start();
+t2.start();
+
+Problems:
+Thread manually create karna
+Thread manually start karna
+Thread lifecycle khud manage karna
+
+With ExecutorService
+ExecutorService executor = Executors.newFixedThreadPool(2);
+executor.execute(new Counter());
+executor.execute(new Counter());
+executor.shutdown();
+
+Observe karo.
+Tumne ek bhi
+new Thread(...)
+nahi likha.
+Java internally thread pool create karegi.
+
+⭐⭐⭐ Internal Working ===============>
+ExecutorService executor = Executors.newFixedThreadPool(2);
+
+Matlab
+Worker-1
+Worker-2
+Pool me ready hain.
+
+Ab
+executor.execute(Task1);
+
+Internal
+Worker-1 → Task1
+Fir
+executor.execute(Task2);
+Worker-2 → Task2
+Fir
+executor.execute(Task3);
+
+Ab dono busy hain.
+Worker-1 → Busy
+Worker-2 → Busy
+Task3 → Queue
+
+Jaise hi Worker-1 free hoga
+Worker-1 → Task3
+
+Visual
+              ExecutorService
+      -----------------------------
+           Thread Pool
+      Worker-1
+      Worker-2
+      -----------------------------
+               Queue
+          Task3
+          Task4
+          Task5
+
+Real World Example : Suppose tum Notification Service bana rahe ho.
+1000 users ko mail bhejna hai.
+
+Galat ❌
+for(User user : users){
+    Thread t = new Thread(() -> sendMail(user));
+    t.start();
+}
+1000 threads 😅
+
+Sahi
+ExecutorService executor = Executors.newFixedThreadPool(20);
+for(User user : users){
+    executor.execute(() -> sendMail(user));
+}
+
+20 workers.
+1000 emails.
+Threads reuse honge.
+Server stable rahega.

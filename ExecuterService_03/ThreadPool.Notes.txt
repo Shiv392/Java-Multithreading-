@@ -1,0 +1,112 @@
+⭐⭐⭐ What is Thread Pool ====================>
+Step 1: Why Thread Pool? Sabse pehle socho tumhari current approach.
+Thread t1 = new Thread(task1);
+Thread t2 = new Thread(task2);
+Thread t3 = new Thread(task3);
+
+t1.start();
+t2.start();
+t3.start();
+
+Har task ke liye ->
+New Thread
+Execute
+Thread Dead
+
+Fir next task
+New Thread
+Execute
+Thread Dead
+Ye cycle baar-baar chal rahi hai.
+
+Problem ---------->
+Problem 1 — Thread Creation
+Thread banana cheap nahi hota.
+
+OS ko:
+Thread create karna
+Stack memory allocate karni
+Scheduler me register karna
+
+Ye sab karna padta hai.
+Har baar cost lagti hai.
+
+Problem 2 — Thread Destruction
+Task khatam.
+Thread Destroyed
+Fir next request.
+Fir
+Create New Thread
+Fir destroy.
+Ye create-destroy cycle waste hai.
+
+Problem 3 — Memory
+Har thread ka apna stack hota hai.
+Suppose 1 Thread = ~1 MB Stack
+1000 threads ≈ 1000 MB
+Sirf thread stack ke liye.
+Ab application ki memory alag.
+
+Problem 4 — Context Switching
+Suppose
+CPU
+8 Cores
+Aur
+1000 Threads
+CPU kya karega?
+Thread-1
+↓
+Thread-88
+↓
+Thread-401
+↓
+Thread-12
+↓
+Thread-900
+
+Har switch me CPU ko current thread ka state save karna aur next thread ka state load karna padta hai.
+Isko bolte hain, Context Switching Ye bhi expensive hai.
+
+⭐⭐⭐ Solution ============>
+Thread Pool : Thread Pool is a collection of pre-created worker threads that are reused to execute multiple tasks.
+Instead of creating & destroying threads again and again, we can use predefined threads. 
+
+Keywords yaad rakho:
+Pre-created
+Reusable
+Worker Threads
+
+⭐⭐⭐ Internal Flow =============>
+Suppose Thread Pool size = 3
+Aur 6 tasks aaye.
+Task1
+Task2
+Task3
+Task4
+Task5
+Task6
+
+Initially : 
+Worker1 → Free
+Worker2 → Free
+Worker3 → Free
+
+Execution
+Worker1 → Task1
+Worker2 → Task2
+Worker3 → Task3
+Task4? -> Queue
+Task5? -> Queue
+Task6? -> Queue
+
+Jaise hi Worker2 free hua.
+Worker2 → Task4
+Fir
+Worker2 → Task5
+Isi tarah threads reuse hote rehte hain.
+Benefits
+✅ Thread creation cost kam
+✅ Thread destruction cost kam
+✅ Memory efficient
+✅ Context switching control me
+✅ Better performance
