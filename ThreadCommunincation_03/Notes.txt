@@ -1,0 +1,111 @@
+⭐⭐⭐Thread Communication kya hai? ==============>
+Simple definition: Ek thread dusre thread ko signal bhejta hai ki "ab tum apna kaam continue kar sakte ho."
+
+Iske liye Java me 3 methods hain:
+⭐ wait()
+⭐ notify()
+⭐ notifyAll()
+Ye teeno Object class ke methods hain.
+
+Ek Real Example : Maan lo ek restaurant me sirf 1 plate hai.
+Do log hain:
+1. Producer (khana banata hai)
+2. Consumer (khana khata hai)
+
+Initially, Plate = Empty
+# Consumer aaya.
+Consumer bolega: "Plate me khana hi nahi hai, main wait karta hoon." Ye karega:
+lock.wait();
+
+Ab kya hua? Consumer WAITING state me. 
+Lock release.
+Producer lock le sakta hai.
+
+# Producer
+Producer lock leta hai.
+Khana bana deta hai.
+Plate = Full
+Ab producer consumer ko bolta hai: lock.notify();
+
+Meaning: "Bhai uth ja, khana aa gaya."
+
+Ab consumer RUNNABLE ho jayega. Lekin immediately nahi chalega.
+
+Pehle producer synchronized block se bahar niklega aur lock release karega. Fir consumer lock acquire karega. Fir consume karega.
+
+Timeline =============>
+# Consumer
+Lock acquired
+      │
+      ▼
+Plate Empty
+      │
+wait()
+      │
+Lock Released
+      ▼
+WAITING
+
+# Producer
+Lock acquired
+      │
+Food Prepared
+      │
+notify()
+      │
+Lock Released
+
+# Consumer
+WAITING
+     │
+notify()
+     ▼
+RUNNABLE
+     │
+Lock acquired
+     ▼
+Food Consume
+
+Sabse Important Rule ⭐
+notify() thread ko immediately execute nahi karta.
+Sirf bolta hai: "Ready ho ja."
+Execution tab hoga jab
+notify karne wala thread synchronized block se bahar niklega.
+⭐ Lock free hoga.
+⭐ Scheduler CPU dega.
+
+⭐⭐⭐ notify() vs notifyAll()====================>
+Suppose 3 consumers wait kar rahe hain.
+Consumer-1 | Consumer-2 |Consumer-3
+
+Producer ne notify() kiya. To sirf ek thread uth jayega.
+Kaunsa? ❓ JVM decide karegi.
+Guarantee nahi hai.
+Agar
+
+notifyAll() kiya To
+Consumer-1 | Consumer-2 | Consumer-3
+
+sab RUNNABLE ho jayenge. Jo pehle lock lega, wo execute karega. Baaki fir wait karenge.
+
+⭐⭐⭐ Golden Rules ==================>
+Rule 1 : wait(), notify(), notifyAll()
+hamesha same object ke monitor par call hote hain.
+
+synchronized(lock){
+    lock.wait();
+}
+
+Rule 2 : Ye methods sirf synchronized block/method ke andar call kar sakte ho.
+Nahi to : IllegalMonitorStateException milega.
+
+Rule 3 : wait() lock release karta hai.
+
+Rule 4 : notify() lock release nahi karta.
+Wo sirf waiting thread ko RUNNABLE banata hai.
+Lock tab release hoga jab synchronized block khatam hoga.
+
+⭐⭐⭐ Coding Implementation =================>
+1. Create an Buffer class with produce & consume methods
+2. Create and Producer class & Consumer class implementating Runnable task
+3. Create Main.Java

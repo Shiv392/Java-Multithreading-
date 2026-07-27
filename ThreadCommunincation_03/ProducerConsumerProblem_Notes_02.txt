@@ -1,0 +1,79 @@
+⭐⭐⭐ Problem Statement ==================>
+Ek buffer hai jiski capacity 1 hai.
+Ek Producer hai.
+Ek Consumer hai.
+
+Buffer = Empty
+
+Rules:
+Producer sirf tab produce karega jab buffer empty ho.
+Consumer sirf tab consume karega jab buffer full ho.
+Agar wait/notify na ho
+
+# Producer
+Buffer Empty
+Produce Item 1
+Buffer full.
+Fir
+
+Produce Item 2 😅 Buffer already full hai.
+Problem.
+
+# Consumer
+Consumer aaya
+Consume
+Lekin buffer empty hai.
+Ab kya consume karega?
+Problem.
+
+Isliye Communication chahiye
+
+Step 1 : 
+Initially Buffer = Empty
+Consumer pehle aa gaya.Consumer dekhta hai Buffer Empty , Wo bolta hai
+Mere paas consume karne ke liye kuch nahi hai. To
+wait();
+Ab
+
+Consumer
+↓
+WAITING
+Aur lock release.
+
+Step 2 : 
+Producer aaya. Lock mil gaya. Buffer me item daal diya.
+Buffer = Full, Ab producer bolta hai
+notify();
+
+Meaning : Consumer uth ja.
+Ab consumer RUNNABLE.
+
+Step 3 : 
+Producer synchronized block se bahar.
+Lock release.
+Consumer lock leta hai.
+Consumer consume karta hai.
+Buffer = Empty
+Ab producer ko notify karega.
+
+⭐⭐⭐ Producer Consumer Lifecycle ====================>
+Producer
+↓
+Produce
+↓
+notify()
+↓
+Consumer
+↓
+Consume
+↓
+notify()
+↓
+Producer
+↓
+Produce
+↓
+notify()
+↓
+Consumer
+
