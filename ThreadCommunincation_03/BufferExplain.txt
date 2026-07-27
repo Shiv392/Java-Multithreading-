@@ -1,0 +1,90 @@
+Initial State
+item = 0
+available = false
+
+Step1 : Scheduler ne Producer ko CPU de diya.
+Producer : buffer.produce();
+while(available) Check karta hai.
+available = false
+
+Condition : false To wait nahi karega.
+Fir
+item = 1;
+available = true;
+
+Buffer : 1
+
+print Produced : 1
+Fir : notify();
+
+Consumer ko signal.
+Lekin agar consumer wait nahi kar raha to koi effect nahi.
+Producer synchronized block se bahar.
+Lock release.
+State = Buffer = full.
+
+Step 2 : Scheduler Consumer ko CPU deta hai.
+
+Consumer : consume();
+while(!available)
+available : true
+Consume karega , Consumed : 1
+Fir
+available = false;
+Buffer Empty.
+Fir
+notify();
+Producer ko signal.
+Consumer lock release.
+State == Buffer Empty 
+
+again producer calls produce();
+
+# Agar Consumer pehle aa jaye
+Initial : Buffer Empty
+Consumer : consume() andar.
+Check : while(!available)
+!false
+true
+To
+wait();
+
+Consumer
+WAITING
+Lock release.
+
+Ab Producer aaya.
+Produce kiya.
+Produced : 1
+Fir
+
+notify();
+Consumer RUNNABLE.
+Producer lock release.
+Consumer lock acquire.
+Consume.
+
+Flow ==============>
+Producer
+     │
+produce()
+     │
+Buffer Full
+     │
+notify()
+     │
+Lock Release
+     ▼
+-------------------------------
+Consumer
+     │
+consume()
+     │
+Buffer Empty
+     │
+notify()
+     │
+Lock Release
+     ▼
+-------------------------------
+Producer
