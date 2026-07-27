@@ -23,3 +23,151 @@ There are multiple ways to implement locking in Java.
 Given Example 
 1. Locking >> InterinsicLock >> Main.java
 2. Lockng >> ReentrantLock >> Main.java
+
+##3. Read Write Lock 
+Problem : Maan lo tumhare paas ek class hai:
+class BankAccount {
+    private int balance = 1000;
+    public int getBalance() {
+        return balance;
+    }
+    public void deposit(int amount) {
+        balance += amount;
+    }
+}
+
+Ab 100 threads hain.
+
+95 sirf getBalance() call kar rahe hain.
+5 deposit() call kar rahe hain.
+Agar synchronized use kare
+
+public synchronized int getBalance() {
+    return balance;
+}
+public synchronized void deposit(int amount) {
+    balance += amount;
+}
+
+Ab kya hoga?
+Reader-1
+Reader-2
+Reader-3
+Reader-4
+
+Sab line me wait karenge.
+Reader-1 ✅
+Reader-2 ❌ Wait
+Reader-3 ❌ Wait
+Reader-4 ❌ Wait
+
+Lekin socho...
+Ye log sirf read hi to kar rahe hain.
+Koi data modify thodi kar raha hai.
+To inko ek saath allow kyu nahi kare?
+
+Yahin se ReadWriteLock aaya.
+ReadWriteLock : Ye do alag locks provide karta hai.
+Read Lock
+Write Lock
+
+Rule 1 : Multiple Readers allowed.
+Reader-1 ✅
+Reader-2 ✅
+Reader-3 ✅
+Reader-4 ✅
+Sab ek sath.
+
+Rule 2 : Write aya then reader block 
+Writer aaya.
+Writer
+Ab
+Reader ❌
+Reader ❌
+Reader ❌
+Sab wait.
+Kyoki writer data modify karega.
+
+Rule 3 : Writer execute kar raha hai. Dusra writer bhi wait karega.
+Writer-1 ✅
+Writer-2 ❌
+Ek hi writer.
+
+Visual Resource =============>
+Read Lock
+Reader1  ✅
+Reader2  ✅
+Reader3  ✅
+-------------------------
+Writer
+Writer1  ❌ Wait
+Writer ke time
+Writer1 ✅
+Reader1 ❌
+Reader2 ❌
+Reader3 ❌
+
+Implementation ========> BankAccount.java and Main.java file 
+
+Real world Examples =============>
+Banking App : 10000 Users
+Sab account dekh rahe hain.
+Read
+Read
+Read
+Read
+
+Ek user : Transfer Money Kar raha hai.
+Transfer ke time
+Write Lock
+Baki sab wait.
+Transfer complete.
+
+Fir sab read continue.
+
+Why Performance Better?
+Suppose : 100 Operations
+95 Read
+5 Write
+
+synchronized : 95
+Sequential : Ek-ek karke.
+
+ReadWriteLock
+95 Readers
+Parallel
+
+Huge performance gain.
+
+⭐⭐⭐ When should we use ReadWriteLock instead of synchronized?
+Answer:
+Use ReadWriteLock when the application is read-heavy and writes are relatively infrequent. It allows multiple threads to read concurrently while still ensuring exclusive access for write operations.
+
+When NOT to use ReadWriteLock
+Suppose
+50 Reads
+50 Writes
+To fayda almost khatam.
+Kyoki writer sabko rok dega.
+
+# Not-Fait Readwrite Locking ---------->
+R1  R2  R3  ----Reading----
+
+          W (Waiting)
+R4 arrives
+↓
+R4 bhi read kar sakta hai 😅
+Writer aur wait karega.
+
+# Fair Readwrite Locking -------->
+R1  R2  R3 ----Reading----
+          W (Waiting)
+R4 arrives
+↓
+R4 bhi wait karega.
+↓
+R1,R2,R3 finish
+↓
+Writer executes
+↓
+R4 starts reading
