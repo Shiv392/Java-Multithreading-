@@ -1,64 +1,85 @@
-# ExecutorService
+⭐⭐⭐ Problem Statement ======================>
+Abhi tak tum thread aise bana rahe the.
 
-ExecutorService is a thread pool provided by Java to manage and execute multiple tasks efficiently.
+Thread t1 = new Thread(new Counter());
+Thread t2 = new Thread(new Counter());
 
-## Why use ExecutorService?
+t1.start();
+t2.start();
+Suppose tumhe
 
-- No need to create and manage threads manually.
-- Reuses existing threads (Thread Pool).
-- Better performance than creating new threads repeatedly.
-- Automatically schedules tasks.
+10 Threads banane hain.
+Theek hai.
 
-Instead of:
+Ab socho
 
-Thread -> Work -> Destroy
+1000 Client Requests har second aa rahi hain. Har request ke liye
+new Thread(...)
+karoge.
 
-ExecutorService:
+Thread t1 = new Thread(task1);
+Thread t1 = new Thread(task2);
+Thread t1 = new Thread(task3);
+...
+Thread t1000 = new Thread(task1000);
+Question:
+Kya problem hogi?
 
-Thread Pool -> Execute Multiple Tasks -> Reuse Threads
+Problem 1 — Thread Creation Cost
+Thread banana free nahi hota.
+OS ko
+Memory allocate karni padti hai.
+Stack create karna padta hai.
+Scheduler me register karna padta hai.
+Ye expensive operation hai.
 
-## Common Methods
+Problem 2 — Context Switching
+1000 threads
+↓
+CPU sirf 8 cores.
+Ab CPU continuously switch karega.
+Thread1
+↓
+Thread55
+↓
+Thread890
+↓
+Thread3
+↓
+Thread700
 
-1. execute(Runnable task)
-   - Executes a Runnable task.
-   - Does not return any result.
+Ye context switching bahut costly hai.
 
-2. submit(Runnable/Callable task)
-   - Submits a task for execution.
-   - Returns a Future object.
-   - Can be used to get the result of a Callable task.
+Problem 3 — Memory
+Har thread apna stack rakhta hai.
+Example:
+Agar ek thread ~1 MB stack use kare.
+1000 threads ≈ 1 GB sirf thread stacks.
+Ab application ka memory usage bahut badh gaya.
 
-3. shutdown()
-   - Stops accepting new tasks.
-   - Waits for already submitted tasks to complete.
+Problem 4 — Thread Lifetime
+Suppose Thread sirf 100 ms ka kaam karta hai.
+Fir terminate.
+Next request
+↓
+Fir
+new Thread(...)
+Fir create.
+Fir destroy.
+Ye creation-destruction baar-baar ho raha hai.
+Waste.
 
-4. shutdownNow()
-   - Attempts to stop all running tasks immediately.
-   - Interrupts active threads.
+Real World Example
+Amazon server
+Suppose
+10,000 Requests / second
+Agar har request ke liye
+new Thread()
+banaya jaye,
+Server crash hone ke chances badh jayenge.
 
-5. awaitTermination(timeout, unit)
-   - Waits for all tasks to finish after shutdown().
+This problems solves by Executor Services
 
-## Creating ExecutorService
-
-1. Single Thread
-
-Executors.newSingleThreadExecutor()
-
-2. Fixed Thread Pool
-
-Executors.newFixedThreadPool(n)
-
-3. Cached Thread Pool
-
-Executors.newCachedThreadPool()
-
-## Flow
-
-Create ExecutorService
-        ↓
-Submit Tasks
-        ↓
-Execute Tasks using Thread Pool
-        ↓
-shutdown()
+Notes ---> 
+1. ThreadPoolNotes.txt
+2. ExecutorService.Notes.txt 
