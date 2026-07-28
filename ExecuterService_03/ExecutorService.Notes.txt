@@ -92,3 +92,67 @@ for(User user : users){
 1000 emails.
 Threads reuse honge.
 Server stable rahega.
+
+⭐⭐⭐ ExecutorService Method  ================>
+1 : Create Executor Service -------------> newFixedThreadPool(numbers)
+create Thread pool of 3 workers; 
+ExecutorService executor = Executors.newFixedThreadPool(3);
+Now here if thread pool size is 3 and request comes 10 so onnly 3 thread will be 
+given to do task other will wait in the queue so that completing their task 
+worker again pick from thread pool.
+
+2 : execute() ----------->
+executor.execute(new Counter());
+or
+executor.execute(()-> //business logic);
+
+What does execute() do ? 
+Give a task to ExecutorService, then it will get done using available threads.
+executor.execute(new Counter());
+Here executor service will create therad to do the task 
+Returns : Noting 
+Here execute() dont return value it simply show avaiale thread will do the job in the background.
+and not expecting any result ⭐⭐⭐
+Email
+executor.execute(new SendEmailTask());
+
+Why execute() instead of Thread?
+execute() thread create nahi karta. Wo thread pool ke existing threads reuse karta hai.
+
+3. submit() ----------->
+Future<?> future = executor.submit(new Counter());
+submit() bhi task ExecutorService ko deta hai, lekin ye task ka ek handle (Future) return karta hai.
+Matlab:
+Task
+   ↓
+ExecutorService
+   ↓
+Execute
+   ↓
+Future (Result Handle)
+
+execute() vs submit() ----------->
+execute()	submit()
+void return karta hai	Future return karta hai
+Sirf Runnable	Runnable + Callable
+Result nahi milta	Result mil sakta hai
+Fire-and-forget	Result track kar sakte ho
+
+submit() kab use karte hain ? Jab:
+Result chahiye.
+Task complete hone ka wait karna hai.
+Exception ko track karna hai.
+
+Example:
+Image upload → URL return
+Database insert → Generated ID
+PDF generate → File path
+Payment → Transaction ID
+
+Runnable
+Future<?> future = executor.submit(new Counter());
+Result: Future<?>    // Actual result null hoga
+
+Callable ⭐⭐⭐⭐⭐
+Future<Integer> future = executor.submit(new SumTask());
+Yaha task value return karega.
