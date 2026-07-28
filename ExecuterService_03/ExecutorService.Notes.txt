@@ -158,3 +158,55 @@ Callable ⭐⭐⭐⭐⭐
 code : CallableSubmit_03
 Future<Integer> future = executor.submit(new SumTask());
 Yaha task value return karega.
+
+4. shutdown() ------------->
+executor.shutdown();
+Kya karta hai?
+✅ Naye tasks accept nahi karega.
+✅ Jo tasks already queue me hain, unhe complete karega.
+✅ Fir thread pool band ho jayega.
+Flow:
+Task1 ✅
+Task2 ✅
+Task3 (Queue) ✅
+↓
+shutdown()
+↓
+No New Task
+↓
+Pool Closed
+
+Real World:
+Office bol deta hai: "Aaj ke baad koi naya kaam mat lena, jo current kaam hai wo complete karo."
+
+5. shutdownNow() --------->
+executor.shutdownNow();
+Kya karta hai?
+❌ Running tasks ko interrupt karne ki koshish karta hai.
+❌ Queue wale tasks execute nahi honge.
+❌ Immediately shutdown ki request karta hai.
+Flow:
+Task1 (Running) ⚠ Interrupt
+Task2 (Running) ⚠ Interrupt
+Task3 (Queue) ❌ Cancel
+Task4 (Queue) ❌ Cancel
+
+Real World:
+Office me fire alarm baj gaya. Sab kaam chhodo aur bahar niklo. 🚨
+⚠️ Note: Running task tabhi rukega jab wo interrupt ko handle kare.
+
+6. awaitTermination() ----------->
+executor.shutdown();
+executor.awaitTermination(5, TimeUnit.SECONDS);
+
+Kya karta hai? Current thread wait karta hai.
+Shutdown
+↓
+Wait Maximum 5 Seconds
+↓
+Sab Task Complete?
+Yes → Continue
+No → Timeout
+
+Real World:
+Boss: "Main ghar tab jaunga jab maximum 5 minute tak employees ka kaam complete ho jaye."
