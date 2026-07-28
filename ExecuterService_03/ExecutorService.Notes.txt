@@ -150,9 +150,11 @@ PDF generate → File path
 Payment → Transaction ID
 
 Runnable
+Code : RunnableSubmit_02
 Future<?> future = executor.submit(new Counter());
 Result: Future<?>    // Actual result null hoga
 
 Callable ⭐⭐⭐⭐⭐
+code : CallableSubmit_03
 Future<Integer> future = executor.submit(new SumTask());
 Yaha task value return karega.

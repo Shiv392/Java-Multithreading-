@@ -7,34 +7,19 @@ public class Main {
     public static void main(String[]args){
         Counter counter = new Counter();
 
-        //Creat a thrad pool of size 2
+        //1. create executor service 
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
-        //submit task1
-        executor.execute(()->{
-            for (int i = 0; i < 1000000; i++) {
-                counter.increment();
-            }
-            System.out.println("Task 1 Completed");
-        });
+        //execute to work the thread 
+        executor.execute(counter);
+        executor.execute(counter);
+        executor.execute(counter);
 
-        //submit task2 
-        executor.execute(()->{
-            for (int i = 0; i < 1000000; i++) {
-                counter.increment();
-            }
-            System.out.println("Task 2 Completed");
-        });
+        //Output :
+       // pool-1-thread-1 is executing task...
+       // pool-1-thread-2 is executing task...
+       // pool-1-thread-1 is executing task...
 
-        //stop acceptin new task
-        executor.shutdown();
-
-         // Wait until all submitted tasks finish
-        while (!executor.isTerminated()) {
-            // Busy waiting
-        }
-
-        // Print final result
-        System.out.println("Final Count : " + counter.getCount());
+       executor.shutdown();
     }
 }
