@@ -1,0 +1,65 @@
+CompletableFuture ⭐⭐⭐ ==================>
+CompletableFuture Java ka asynchronous programming API hai jo tasks ko background threads me execute karta hai aur unke results ko bina manually wait kiye chain, combine aur handle karne deta hai.
+
+Java Async --> CompletableFuture + ExecutorService (Working thread + future result );
+
+Problem =========>
+In java if we have to get response from thread we can use ExecutorService with Callable interface.
+But here is the problem 
+Future<User> f1 = executor.submit(() -> getUser());
+Future<Order> f2 = executor.submit(() -> getOrders());
+Future<Address> f3 = executor.submit(() -> getAddress());
+
+Main Thread
+    |
+    |---- submit(f1)
+    |---- submit(f2)
+    |---- submit(f3)
+Worker-1 -> getUser()
+Worker-2 -> getOrders()
+Worker-3 -> getAddress()
+From here main thread is completly free.
+
+Now when we try to use get() 
+User user = f1.get();
+if we call get() and thread execution still working i.e it will block the main thread 
+now working thread get completes value will be inside user 
+
+⭐❌ so if thread take more then like 2 4 second whoe main thread will have to wait.
+User user = f1.get();
+Order order = f2.get();
+Address address = f3.get();
+
+Maan lo
+getUser()      -> 5 sec
+getOrders()    -> 3 sec
+getAddress()   -> 2 sec
+
+get() ka matlab hai:
+"Main thread, yahi ruk jao. Jab tak result nahi aata, aage mat badho."
+submit()
+↓
+Task starts immediately
+↓
+Background execution
+↓
+Result ready
+↓
+get() (jab bhi call karo)
+
+Real World Problem --------->
+1. Suppose we have an thread that will fetch users from the db.
+2. Now Future<User> future = executor.submit(() -> {
+    // DB call
+    return user;
+});
+3. User user = future.get();
+Now here if db execution is time more time and between this we are using 
+get() so it will block the main thread untill working thread gettting completed. 
+after getting data from the working thread then it main thread will go for next execution. 
+This is blocking operation.
+
+⭐⭐⭐ ==========>
+"Agar DB operation me 5 second lag rahe hain aur usse pehle future.get() call kar diya, to main thread DB response aane tak block ho jayega. Response milte hi get() return karega aur uske baad hi main thread aage execute karega.
+
+⭐⭐⭐ Solution ==========> CompletableFuture 
