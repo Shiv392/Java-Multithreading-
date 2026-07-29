@@ -84,12 +84,16 @@ CompletableFuture<String> token  = future.thenApply(user -> {
     return jwtService.generateToken(user);
 });
 By default thenApply(...) Naya thread create nahi karta.
+Here ie. here thread is main thread by default, and if we want to run this also in 
+different thread, then we can use ⭐thenApplyAsync();
 
 4.⭐ thenAccept() : now we have to just use the result not returnig.
 thenAccept take result from completeTable future to access and use only. It only executes 
 method 
 
 token.thenApply(token-> System.out.println("Token----"+ token));
+Here ie. here thread is main thread by default, and if we want to run this also in 
+different thread, then we can use ⭐ thenAcceptAsync();
 
 5.⭐ thenRun() : Agar previous task complete hone ke baad ek aur task chalana hai, lekin previous result ki zarurat hi nahi hai?
 Tab use karte hain thenRun();
