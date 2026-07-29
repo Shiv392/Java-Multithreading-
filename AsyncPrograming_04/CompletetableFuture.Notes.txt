@@ -2,6 +2,25 @@
 CompletableFuture tells 
 "Dont wait, just tell me what to do after getting future data"
 
+Ye async task + result + chaining ka abstraction hai.
+Ye khud thread create nahi karta.
+Isko execution ke liye kisi thread ki zarurat hoti hai.
+Wo thread do jagah se aa sakta hai.
+
+Case 1 : CompletableFuture.supplyAsync(...)
+Thread kahan se aaya?
+ForkJoinPool.commonPool()
+↓
+Worker Thread
+Java ka default pool.
+
+Case 2
+CompletableFuture.supplyAsync(..., executorService)
+Ab thread kahan se aaya?
+ExecutorService
+↓
+Pool Thread
+
 Using Future ------->
 //can block the main thread if future is taking more time while accessing data. 
 User user = future.get();
