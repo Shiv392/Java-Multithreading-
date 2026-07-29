@@ -10,6 +10,7 @@ public class Main {
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
         //Getting callable task result value
+        //when we call submit method then it executres the task 
         Future<Integer>future = executor.submit(new Sum());
         System.out.println("Task submitted");
 

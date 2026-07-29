@@ -1,0 +1,218 @@
+⭐⭐⭐ What is CompletableFuture ============>
+CompletableFuture tells 
+"Dont wait, just tell me what to do after getting future data"
+
+Using Future ------->
+//can block the main thread if future is taking more time while accessing data. 
+User user = future.get();
+process(user);
+
+Using CompletableFuture -------->
+CompletableFuture<User> future = CompletableFuture.supplyAsync(() -> getUser());
+future.thenApply(user -> process(user));
+
+Flow -------->
+Main Thread
+↓
+supplyAsync()
+↓
+Worker Thread
+   |
+   |---- DB Call
+   |---- User Ready
+   |
+   ↓
+thenApply()
+↓
+Process User
+⭐⭐⭐ yaha main thread ne get kiya hi nhi to block nhi hoga. 
+
+⭐⭐⭐ CompletableFuture Method ============>
+
+1. ⭐ runAsync() : Jab koi result return nahi karna.
+Example:
+CompletableFuture.runAsync(() -> {
+    sendEmail();
+});
+Like Runnable
+
+Return Type: CompletableFuture<Void>
+Use Cases:
+Email
+Logging
+Notification
+Audit
+Sirf kaam karna hai.
+
+2.⭐ supplyAsync() : Jab result chahiye.
+CompletableFuture<User> future = CompletableFuture.supplyAsync(() -> {
+        return getUser();
+});
+Like Callable
+
+Return : CompletableFuture<User>
+Ye Future se similar hai, lekin chain bhi bana sakte ho.
+
+3.⭐ thenApply() : previous stage ke result ko receive karta hai, uspar processing karta hai aur ek naya result return karta hai.
+Question:
+DB se User aa gaya, ab uske baad kya karna hai?
+Real Example
+CompletableFuture<User> future = CompletableFuture.supplyAsync(() -> {
+        return userRepository.findById(1);
+});
+
+CompletableFuture<String> token  = future.thenApply(user -> {
+    return jwtService.generateToken(user);
+});
+By default thenApply(...) Naya thread create nahi karta.
+
+4.⭐ thenAccept() : now we have to just use the result not returnig.
+thenAccept take result from completeTable future to access and use only. It only executes 
+method 
+
+token.thenApply(token-> System.out.println("Token----"+ token));
+
+5.⭐ thenRun() : Agar previous task complete hone ke baad ek aur task chalana hai, lekin previous result ki zarurat hi nahi hai?
+Tab use karte hain thenRun();
+
+work as same like thenApply but it dont need response to execute. It only make sure like 
+before execution must done before moving next. 
+CompletableFuture
+.supplyAsync(()-> getUser())
+.thenApply(user-> generateToken())
+.thenRun(()-> auditService.log("Login done"));
+Here thenRun works after thenApply but not taking any previous response.
+
+6.⭐ thenCompose() : same as thenApply()
+like after getting response we can do more things 
+but main difference is 
+here 
+CompletableFuture<CompletableFuture<List<Order>>> future = getUser().thenApply(user -> getOrders(user));
+
+Here getOrders() will return CompletableFuture<List<Order>>
+also thenApply bhi CompletableFuture return krega to final Output
+⭐ CompletableFuture<CompletableFuture<List<Order?>>> nested answer.
+
+Solution -----> thenCompose() 
+CompletableFuture<List<Order>> future = getUser()
+            .thenCompose(user-> getOrder(user));
+
+Now output is ⭐ CompletableFuture<List<Order>> 
+CompletableFuture<List<Order>> future =
+    getUser(userId)
+        .thenCompose(user -> orderService.getOrders(user));
+
+If output is normal string or integer then we can use thenApply else we should use thenCompose. 
+
+CompletableFuture.supplyAsync(() -> 10)
+    .thenCompose(x ->
+        CompletableFuture.supplyAsync(() -> x * 2)
+    );
+Isme supplyAsync phle retunr krega CompletableFuture<Integer>future 
+also CompletableFuture<Integer>future retun krega second supplyAsync so 
+thenCompose both response ko merge kr dega. 
+final data type ⭐ CompletableFuture<Integer>future.
+
+7.⭐ thenCombine() : 2 independent CompletableFuture ke results ko combine karke ek naya result return karta hai.
+difference between thenCompose & thenCombine ->
+in thenCompose if previous task is not completed, next will not even start.
+but in thenCombine both task are indepandant and can run palleraly. 
+thenCompose()-> task2 depands on task1
+thenCombine()-> task1 & task2 are indepandant we need theri response combine 
+
+CompletableFuture<String> userFuture =
+    CompletableFuture.supplyAsync(() -> {
+        System.out.println("Fetching User : " + Thread.currentThread().getName());
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {}
+
+        return "Shiv";
+    });
+
+CompletableFuture<Integer> orderFuture =
+    CompletableFuture.supplyAsync(() -> {
+        System.out.println("Fetching Orders : " + Thread.currentThread().getName());
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {}
+
+        return 5;
+    });
+
+CompletableFuture<String> result =
+    userFuture.thenCombine(orderFuture,
+        (user, orders) -> {
+            return user + " has " + orders + " orders.";
+        });
+
+here user, orders are CompletableFuture future response of userFuture and orderFuture
+Result print
+System.out.println(result.join());
+
+Output
+Fetching User : ForkJoinPool.commonPool-worker-1
+Fetching Orders : ForkJoinPool.commonPool-worker-2
+Shiv has 5 orders.
+
+8.⭐ allOf() : same as thenCombine();
+here if we have to deal with multiple futures more than 2 then we can use allOf().
+But it return void so we can use thenRun() to get results. 
+2 Future
+    ↓
+thenCombine()
+Many Future
+    ↓
+allOf()
+
+Example : Dashboard --> profile api + menu api + permission api
+CompletableFuture<Profile>profie = CompletableFuture.supplyAsync(()-> getProfile());
+CompletableFuture<Menus>menus = CompletableFuture.supplyAsync(()-> getMenus());
+CompletableFuture<Permission>permission = CompletableFuture.supplyAsync(()-> getPermissions());
+
+CompletableFuture<void>all = CompletableFuture.allOf(profile, menus, permission);
+
+all.thenRun(()->{
+    Profile profileRes = profile.join();
+    Menus menuRes = menus.join();
+    Permission permissionRes = permission.join();
+
+    System.out.println("===== Dashboard =====");
+    System.out.println(profileRes);
+    System.out.println(menuRes);
+    System.out.println(permissionRes);
+}).join(); 
+//main thread wait here 
+
+    static String getProfile() {
+        sleep(2000);
+        return "Profile : Shiv";
+    }
+
+    static String getMenus() {
+        sleep(3000);
+        return "Menus : Home, Users, Reports";
+    }
+
+    static String getPermissions() {
+        sleep(1000);
+        return "Permissions : READ, WRITE";
+    }
+
+Ye approach fast kyu hai?
+
+Agar sequential hota:
+Profile      = 2 sec
+Menu         = 3 sec
+Permission   = 1 sec
+Total = 6 sec
+
+Agar parallel (allOf) use kiya:
+Profile      = 2 sec
+Menu         = 3 sec
+Permission   = 1 sec
+Total ≈ 3 sec
+
+Time sabse slow API ke barabar lagta hai, sabka sum nahi.
