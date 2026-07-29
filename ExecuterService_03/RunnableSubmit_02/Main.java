@@ -13,6 +13,12 @@ public class Main {
         Future<?>future = executor.submit(new Counter());
         System.out.println("Task Submitted........");
 
+        //in Thread we have to use join() so that my main thread will wait untill 
+        //thread complete their task.
+        //in executor service we can also do same using Future and get(); 
+        //Future<?>furuter = executor.submit(task);
+        //future.get(); 
+
         try {
             Object result = future.get(); //posible null 
             System.out.println("Future result: "+result);

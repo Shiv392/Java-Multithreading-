@@ -119,7 +119,7 @@ executor.execute(new SendEmailTask());
 Why execute() instead of Thread?
 execute() thread create nahi karta. Wo thread pool ke existing threads reuse karta hai.
 
-3. submit() ----------->
+3. submit() -----------> Returns future object. Use with Runnable and Callable 
 Future<?> future = executor.submit(new Counter());
 submit() bhi task ExecutorService ko deta hai, lekin ye task ka ek handle (Future) return karta hai.
 Matlab:
