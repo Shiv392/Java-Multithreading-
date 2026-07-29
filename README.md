@@ -10,6 +10,18 @@ The goal of this repository is to build a strong understanding of Java concurren
 
 Follow the topics in the given order.
 
+                 Java Concurrency
+
+                      │
+        ┌─────────────┼─────────────┐
+        │             │             │
+        ▼             ▼             ▼
+     Thread     ExecutorService   CompletableFuture
+
+ Executes       Manages Threads   Manages Async Flow
+
+ Actual Work    Thread Pool        Result + Chaining
+
 ### 1️⃣ Threads
 Learn the basics of Java Threads.
 
