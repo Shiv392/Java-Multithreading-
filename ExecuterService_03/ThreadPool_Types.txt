@@ -1,0 +1,76 @@
+1. FixedThreadPool ⭐⭐⭐⭐⭐ ========================>
+ExecutorService executor = Executors.newFixedThreadPool(3);
+Kya hota hai?
+Maximum 3 threads create honge.
+Agar 10 tasks aaye:
+Thread-1 -> Task1
+Thread-2 -> Task2
+Thread-3 -> Task3
+Task4
+Task5
+Task6
+Task7
+...
+Queue me wait karenge.
+
+Jaise hi koi thread free hoga: Then we queue se ek task pick kr lega 
+Thread-2 finish
+↓
+Task4 execute
+
+Use Case ------------>
+Backend APIs
+Database operations
+Most common thread pool
+
+2. CachedThreadPool ⭐⭐⭐⭐
+ExecutorService executor = Executors.newCachedThreadPool();
+Kya hota hai? Yaha koi fixed limit nahi hoti.
+
+Suppose 100 tasks
+To
+Thread1
+Thread2
+Thread3
+...
+Thread100
+
+Sab create ho sakte hain.
+Agar koi idle thread hai to usko reuse karega.
+Agar nahi hai to naya thread bana dega.
+
+Use Case ------------>
+Short-lived tasks.
+Jaise
+Logging
+Small background work
+Lightweight operations
+
+Danger ⚠️ ---------->
+Agar 1,00,000 tasks aa gaye to 1,00,000 threads ban sakte hain. Memory crash bhi ho sakti hai. Production me isliye kam use hota hai.
+
+3. ScheduledThreadPool ⭐⭐⭐⭐⭐ ==================>
+ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+
+Ye sirf task execute nahi karta. Ye future me execute bhi kar sakta hai.
+Example scheduler.schedule(task,5,TimeUnit.SECONDS);
+Output
+Wait...
+5 sec
+↓
+Task Run
+
+Repeat bhi kar sakta hai - Har 10 second
+scheduleAtFixedRate(...)
+Ya
+Task complete hone ke 10 second baad
+
+scheduleWithFixedDelay(...);
+
+Use Case ----------->
+Reminder
+Cron Jobs
+Cache Cleanup
+Health Check
+Token Expiry
+Email Scheduler
