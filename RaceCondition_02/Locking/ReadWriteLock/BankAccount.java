@@ -2,6 +2,8 @@ package RaceCondition_02.Locking.ReadWriteLock;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+//ReadWriteLock improves concurrency when reads are frequent and writes are relatively rare. 
+//Multiple threads can hold the read lock concurrently, but the write lock is exclusive."
 
 public class BankAccount {
     private int balance = 100;

@@ -1,5 +1,6 @@
 CompletableFuture ⭐⭐⭐ ==================>
-CompletableFuture Java ka asynchronous programming API hai jo tasks ko background threads me execute karta hai aur unke results ko bina manually wait kiye chain, combine aur handle karne deta hai.
+CompletableFuture Java ka asynchronous programming API hai jo tasks ko background threads me execute karta hai 
+aur unke results ko bina manually wait kiye chain, combine aur handle karne deta hai.
 
 Java Async --> CompletableFuture + ExecutorService (Working thread + future result );
 
@@ -60,6 +61,8 @@ after getting data from the working thread then it main thread will go for next 
 This is blocking operation.
 
 ⭐⭐⭐ ==========>
-"Agar DB operation me 5 second lag rahe hain aur usse pehle future.get() call kar diya, to main thread DB response aane tak block ho jayega. Response milte hi get() return karega aur uske baad hi main thread aage execute karega.
+"Agar DB operation me 5 second lag rahe hain aur usse pehle future.get() call kar diya, 
+to main thread DB response aane tak block ho jayega. 
+Response milte hi get() return karega aur uske baad hi main thread aage execute karega.
 
 ⭐⭐⭐ Solution ==========> CompletableFuture 
