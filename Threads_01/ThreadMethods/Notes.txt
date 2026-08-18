@@ -1,10 +1,10 @@
 #There are several methods in the thread.
 
-1. start() -> call run() inside the thread class.
-2. run() -> actual business logic inside the thread that executes.
-3. sleep(time millisecond) -> make thread stop for the given time.
+1. start() -> call run() inside the thread class, method called by client to start the thread process.
+2. run() -> actual business logic inside the thread that executes, method called by CPU internally.
+3. sleep(time millisecond) -> make thread stop for the given time also with lock if already have.
 4. join() -> wait current thread to get completed first.
-5. wait() --> puts thread in thread mode but also release lock.
+5. wait() --> puts thread in sleep mode but also release lock.
 
 1. public static void main(String[]args){
         Thread t = new Thread(()-> System.out.println("Thread is running...."+ Thread.currentThread().getName()));

@@ -1,0 +1,41 @@
+⭐⭐⭐CompletetableFuture.allOf() ->
+this method calls only when all of the parallel execution is done. 
+Like suppose we have 3 4 operations like 
+1. jwt Create
+2. add user in db
+3. send notification in email
+
+NOw we have a function to do but make sure that each of the operation is done 
+In these type of scenerio, we can use CompletableFuture.allOf().
+
+This only returns when all Services executes.
+It wait all ⭐⭐⭐CompletetableFuture to get completed.
+
+CompletableFuture<String> user =
+        CompletableFuture.supplyAsync(() -> {
+            sleep(1000);
+            return "User Data";
+        });
+
+CompletableFuture<String> orders =
+        CompletableFuture.supplyAsync(() -> {
+            sleep(2000);
+            return "Order Data";
+        });
+
+CompletableFuture<String> payments =
+        CompletableFuture.supplyAsync(() -> {
+            sleep(1500);
+            return "Payment Data";
+        });
+
+CompletableFuture<Void> all =
+        CompletableFuture.allOf(user, orders, payments);
+
+all.thenRun(() -> {
+    System.out.println("All APIs completed");
+
+    System.out.println(user.join());
+    System.out.println(orders.join());
+    System.out.println(payments.join());
+});

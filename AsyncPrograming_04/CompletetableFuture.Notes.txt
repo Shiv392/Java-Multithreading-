@@ -105,6 +105,7 @@ CompletableFuture
 .thenApply(user-> generateToken())
 .thenRun(()-> auditService.log("Login done"));
 Here thenRun works after thenApply but not taking any previous response.
+we can use thenRunAsync() for asynchronous programming
 
 6.⭐ thenCompose() : same as thenApply()
 like after getting response we can do more things 
