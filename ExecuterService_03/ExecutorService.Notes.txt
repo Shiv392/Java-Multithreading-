@@ -101,7 +101,7 @@ Now here if thread pool size is 3 and request comes 10 so onnly 3 thread will be
 given to do task other will wait in the queue so that completing their task 
 worker again pick from thread pool.
 
-2 : execute() ----------->
+2 : execute() -----------> Only execute the Runnable Task without returning any resposne from thread. 
 executor.execute(new Counter());
 or
 executor.execute(()-> //business logic);
