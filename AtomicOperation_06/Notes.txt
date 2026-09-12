@@ -1,0 +1,90 @@
+What Does Volatile solve ? 
+Volatile solve visibility problem but not race condition i.e for the current execution 
+an thread may have old cache value of the object and when multiple thread tries 
+to update the same object so the output will be unpredictable. This is called Race Condition.
+
+Why volatile Does NOT Solve Race Condition?
+A Race Condition occurs when multiple threads access and modify the same shared state concurrently, and the final result depends on the timing/interleaving of their operations.
+Consider:
+private volatile int count = 0;
+
+Two threads execute: count++;
+It looks like one operation, but internally it is approximately:
+1. Read count
+2. Add 1
+3. Write count
+
+Suppose:
+Initial count = 0
+
+Thread 1 → reads 0
+Thread 2 → reads 0
+
+Thread 1 → calculates 1
+Thread 2 → calculates 1
+
+Thread 1 → writes 1
+Thread 2 → writes 1
+
+Expected: count = 2
+Actual: count = 1
+
+This is a Race Condition.
+
+Even though count is volatile, the complete count++ operation is not atomic.
+
+So:
+
+volatile int count;
+count++;
+
+❌ Not thread-safe.
+
+So only using volatile will not solve Race condition we havve two option.
+1. use synchronized block method to lock the resource for the current thread.
+2. Use AtomicInteger | AtomicLong classes that will allow to update one thread per operation.
+
+⭐⭐⭐ Atomic classes 
+Java provides Important atomic classess like AtomicInteger | AtomicLong | AtomicBoolean 
+we use atomic operations:
+
+count.incrementAndGet();
+These operations are designed to perform the update atomically without requiring a traditional synchronized lock.
+
+Atomic Integer Methods ==============>
+1. incrementAndGet() -> increment the value and returns new value 
+AtomicInteger count = new AtomicInteger(10);
+int result = count.incrementAndGet();
+System.out.println(result); // 11
+
+2. getAndIncrement() -> first read the value then increment by one 
+AtomicInteger count = new AtomicInteger(10);
+int result = count.getAndIncrement();
+System.out.println(result); // 10
+System.out.println(count.get()); // 11
+
+3. decrementAndGet() | getAndDecrement() -> same like incrementAndGet() & getAndDecrement();
+
+4. get()-> get the current value of the atomic integer 
+int value = count.get();
+
+5. set() -> set a new value 
+count.set(100);
+
+6. getAndSet(int value) -> return old value then set with the give value .
+7. addAndGet(int value) -> add with the given value and return updated value .
+AtomicInteger count = new AtomicInteger(10);
+int result = count.addAndGet(5);
+System.out.println(result); // 15
+
+8. getAndAdd(int value)-> return old value and add given value .
+9. compareAndSet(int Expected value, int newVValue) -> if current value is equal to Expected value then update
+AtomicInteger count = new AtomicInteger(10);
+boolean updated = count.compareAndSet(10, 20);
+System.out.println(updated); // true
+System.out.println(count.get()); // 20
+
+AtomicInteger count = new AtomicInteger(10);
+boolean updated = count.compareAndSet(5, 20);
+System.out.println(updated); // false
+System.out.println(count.get()); // 10
